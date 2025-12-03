@@ -40,7 +40,7 @@ export default async ({ req, res, log, error }) => {
             }, 400);
         }
 
-        // 3. Validate Payload
+        // 3. Validate Payload & Match Schema
         if (!payload) {
             return res.json({
                 success: false,
@@ -49,6 +49,17 @@ export default async ({ req, res, log, error }) => {
         }
 
         log('Processing payload:', JSON.stringify(payload));
+
+        // Required fields based on your schema
+        const { start_time, duration, app_used, users } = payload;
+
+        // Validation
+        if (start_time === undefined || duration === undefined || !app_used) {
+            return res.json({
+                success: false,
+                message: 'Missing required fields: start_time, duration, app_used'
+            }, 400);
+        }
 
         // 4. Prepare Database Info
         const DATABASE_ID = process.env.DATABASE_ID;
@@ -59,10 +70,13 @@ export default async ({ req, res, log, error }) => {
         }
 
         // 5. Create Document
-        // We add a timestamp if one isn't provided in the payload
+        // Mapping payload to exact schema structure
         const documentData = {
-            ...payload,
-            createdAt: payload.createdAt || new Date().toISOString()
+            start_time: parseInt(start_time), // Ensure integer
+            duration: parseInt(duration),     // Ensure integer
+            app_used: String(app_used),       // Ensure string
+            // Optional: Link to user if users relationship ID is provided
+            ...(users && { users: users })
         };
 
         const document = await databases.createDocument(
@@ -77,7 +91,7 @@ export default async ({ req, res, log, error }) => {
         // 6. Return Success
         return res.json({
             success: true,
-            message: 'Data stored successfully',
+            message: 'Activity logged successfully',
             documentId: document.$id,
             data: document
         });
