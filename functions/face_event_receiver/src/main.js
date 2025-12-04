@@ -18,6 +18,7 @@ export default async ({ req, res, log, error }) => {
         // 3. Parse and Validate Body
         const payload = req.body; // Appwrite automatically parses JSON body
 
+        // Validate required fields (we can check for more if needed)
         if (!payload.user_id || !payload.status) {
             return res.json({ error: 'Missing user_id or status' }, 400);
         }
@@ -25,12 +26,15 @@ export default async ({ req, res, log, error }) => {
         // 4. Save to Database
         const result = await databases.createDocument(
             process.env.DATABASE_ID,
-            'attendance_logs', // Make sure this Collection ID exists!
+            'presence_logs', // <--- CORRECTED: Matches your collection name
             ID.unique(),
             {
                 user_id: payload.user_id,
                 status: payload.status,
-                timestamp: new Date().toISOString()
+                // Pass through the fields sent by the Python client
+                start_time: payload.start_time,
+                end_time: payload.end_time,
+                day: payload.day
             }
         );
 
