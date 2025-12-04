@@ -1,0 +1,36 @@
+{
+    "projectId": "YOUR_PROJECT_ID",
+    "projectName": "Panopticon",
+    "functions": [
+        {
+            "$id": "activity_logger",
+            "name": "activity_logger",
+            "runtime": "node-18.0",
+            "path": "functions/activity_logger",
+            "entrypoint": "src/main.js",
+            "ignore": [
+                "node_modules",
+                ".env"
+            ],
+            "execute": [],
+            "events": [],
+            "schedule": "",
+            "timeout": 15
+        },
+        {
+            "$id": "face_event_receiver",
+            "name": "face_event_receiver",
+            "runtime": "node-18.0",
+            "path": "functions/face_event_receiver",
+            "entrypoint": "src/main.js",
+            "ignore": [
+                "node_modules",
+                ".env"
+            ],
+            "execute": [],
+            "events": [],
+            "schedule": "",
+            "timeout": 15
+        }
+    ]
+}
