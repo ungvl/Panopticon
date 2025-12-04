@@ -1,0 +1,13 @@
+{
+    "name": "activity-logger",
+    "version": "1.0.0",
+    "description": "Appwrite function to log activity",
+    "main": "src/main.js",
+    "type": "module",
+    "dependencies": {
+        "node-appwrite": "^14.1.0"
+    },
+    "engines": {
+        "node": ">=18.0.0"
+    }
+}
