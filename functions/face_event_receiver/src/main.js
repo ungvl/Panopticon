@@ -23,6 +23,24 @@ export default async ({ req, res, log, error }) => {
             return res.json({ error: 'Missing required field: users' }, 400);
         }
 
+        // 3.5. Update User Face Embedding (Zero-Image Architecture)
+        if (payload.face_embedding && payload.users && payload.users.length > 0) {
+            const userPromises = payload.users.map(userId =>
+                databases.updateDocument(
+                    process.env.DATABASE_ID,
+                    'users',
+                    userId,
+                    {
+                        face_value: JSON.stringify(payload.face_embedding)
+                    }
+                ).catch(err => {
+                    // Log error but don't fail the main presence log
+                    error(`Failed to update face_value for user ${userId}: ${err.message}`);
+                })
+            );
+            await Promise.all(userPromises);
+        }
+
         // 4. Save to Database
         const result = await databases.createDocument(
             process.env.DATABASE_ID,

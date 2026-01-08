@@ -51,7 +51,7 @@ export default async ({ req, res, log, error }) => {
         log('Processing payload:', JSON.stringify(payload));
 
         // Required fields based on your schema
-        const { start_time, duration, app_used, users } = payload;
+        const { start_time, duration, app_used, users, app_activity } = payload;
 
         // Validation
         if (start_time === undefined || duration === undefined || !app_used) {
@@ -77,7 +77,9 @@ export default async ({ req, res, log, error }) => {
             duration: parseInt(duration),     // Ensure integer
             app_used: String(app_used),       // Ensure string
             // Optional: Link to user if users relationship ID is provided
-            ...(users && { users: users })
+            ...(users && { users: users }),
+            // Optional: App activity details
+            ...(app_activity && { app_activity: String(app_activity) })
         };
 
         const document = await databases.createDocument(
