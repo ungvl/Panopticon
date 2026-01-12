@@ -34,7 +34,7 @@ export default async ({ req, res, log, error }) => {
         if (!Array.isArray(face_embedding)) {
             return res.json({ error: 'face_embedding must be an array' }, 400);
         }
-
+        //random comment
         // Create the user document
         const document = await databases.createDocument(
             process.env.DATABASE_ID,
