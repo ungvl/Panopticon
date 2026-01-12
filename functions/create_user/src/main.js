@@ -1,15 +1,10 @@
 import { Client, Databases, ID } from 'node-appwrite';
 
-// Environment variables
-// APPWRITE_FUNCTION_PROJECT_ID is auto-injected by Appwrite
-// DATABASE_ID must be set in your Appwrite Function variables
-// API_KEY must be set in your Appwrite Function variables
-
 export default async ({ req, res, log, error }) => {
     const client = new Client()
         .setEndpoint('https://cloud.appwrite.io/v1')
         .setProject(process.env.APPWRITE_FUNCTION_PROJECT_ID)
-        .setKey(process.env.API_KEY); // Ensure this API Key has write access to 'users' collection
+        .setKey(process.env.API_KEY);
 
     const databases = new Databases(client);
 
@@ -25,13 +20,15 @@ export default async ({ req, res, log, error }) => {
     }
 
     try {
-        const payload = JSON.parse(req.body);
+        // Handle both parsed object and string body
+        const payload = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
         log('Processing create_user payload:', JSON.stringify(payload));
 
-        const { name, face_embedding } = payload;
+        // Destructure fields matching Schema
+        const { name, face_embedding, face_id, role } = payload;
 
-        if (!name || !face_embedding) {
-            return res.json({ error: 'Missing required fields: name, face_embedding' }, 400);
+        if (!name || !face_embedding || !face_id || !role) {
+            return res.json({ error: 'Missing required fields: name, face_embedding, face_id, role' }, 400);
         }
 
         if (!Array.isArray(face_embedding)) {
@@ -45,9 +42,11 @@ export default async ({ req, res, log, error }) => {
             ID.unique(),
             {
                 name: name,
-                face_value: JSON.stringify(face_embedding), // Store embedding as JSON string
-                // Add default values for other fields if necessary
-                zero_image_plan: true // Assuming all new web-registered users are Zero-Image compliant
+                face_id: face_id,
+                role: role,
+                face_value: JSON.stringify(face_embedding),
+                // coffee_count is optional (nullable)
+                // zero_image_plan removed as it is not in schema
             }
         );
 
