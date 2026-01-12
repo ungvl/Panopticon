@@ -25,10 +25,10 @@ export default async ({ req, res, log, error }) => {
         log('Processing create_user payload:', JSON.stringify(payload));
 
         // Destructure fields matching Schema
-        const { name, face_embedding, face_id, role } = payload;
+        const { name, face_embedding, face_id } = payload;
 
-        if (!name || !face_embedding || !face_id || !role) {
-            return res.json({ error: 'Missing required fields: name, face_embedding, face_id, role' }, 400);
+        if (!name || !face_embedding || !face_id) {
+            return res.json({ error: 'Missing required fields: name, face_embedding, face_id' }, 400);
         }
 
         if (!Array.isArray(face_embedding)) {
@@ -43,7 +43,7 @@ export default async ({ req, res, log, error }) => {
             {
                 name: name,
                 face_id: face_id,
-                role: role,
+                role: 'test',
                 face_value: JSON.stringify(face_embedding),
                 // coffee_count is optional (nullable)
                 // zero_image_plan removed as it is not in schema
