@@ -31,8 +31,8 @@ export default async ({ req, res, log, error }) => {
             return res.json({ error: 'Missing required fields: name, face_embedding, face_id' }, 400);
         }
 
-        if (!Array.isArray(face_embedding)) {
-            return res.json({ error: 'face_embedding must be an array' }, 400);
+        if (!Array.isArray(face_embedding) || face_embedding.length !== 512) {
+            return res.json({ error: 'face_embedding must be an array of 512 numbers (InsightFace)' }, 400);
         }
         //random comment
         // Create the user document
