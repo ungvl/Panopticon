@@ -46,6 +46,21 @@
             "events": [],
             "schedule": "",
             "timeout": 15
+        },
+        {
+            "$id": "login",
+            "name": "login",
+            "runtime": "node-18.0",
+            "path": "functions/login",
+            "entrypoint": "src/main.js",
+            "ignore": [
+                "node_modules",
+                ".env"
+            ],
+            "execute": [],
+            "events": [],
+            "schedule": "",
+            "timeout": 15
         }
     ]
 }
