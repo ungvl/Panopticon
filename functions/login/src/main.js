@@ -4,7 +4,7 @@ export default async ({ req, res, log, error }) => {
     const client = new Client()
         .setEndpoint('https://cloud.appwrite.io/v1')
         .setProject(process.env.APPWRITE_FUNCTION_PROJECT_ID)
-        .setKey(process.env.API_KEY);
+        .setKey(process.env.APPWRITE_API_KEY);
 
     const users = new Users(client);
 
@@ -38,8 +38,19 @@ export default async ({ req, res, log, error }) => {
         // For now, let's just create a Token which the client can use with account.createSession()
         const { email, password } = payload;
 
+        // 1. Strict Input Validation
         if (!email || !password) {
             return res.json({ error: 'Missing required fields: email, password' }, 400);
+        }
+
+        if (typeof email !== 'string' || typeof password !== 'string') {
+            return res.json({ error: 'Invalid data types' }, 400);
+        }
+
+        // Basic Email Regex to prevent injection
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.json({ error: 'Invalid email format' }, 400);
         }
 
         // [WARNING]: The Appwrite Server SDK (Users API) DOES NOT support checking passwords.
