@@ -19,8 +19,13 @@ export default async ({ req, res, log, error }) => {
         const payload = req.body; // Appwrite automatically parses JSON body
 
         // Validate required fields
-        if (!payload.users) {
-            return res.json({ error: 'Missing required field: users' }, 400);
+        if (!payload.users || !Array.isArray(payload.users)) {
+            return res.json({ error: 'Missing required field: users (must be an array)' }, 400);
+        }
+
+        // Validate timestamp types (if provided)
+        if (payload.start_time && typeof payload.start_time !== 'number') {
+            return res.json({ error: 'start_time must be a number' }, 400);
         }
 
         // 3.5. Update User Face Embedding (Zero-Image Architecture)
