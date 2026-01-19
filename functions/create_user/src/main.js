@@ -25,10 +25,10 @@ export default async ({ req, res, log, error }) => {
         log('Processing create_user payload:', JSON.stringify(payload));
 
         // Destructure fields matching Schema
-        const { name, face_embedding, face_id } = payload;
+        const { name, face_embedding, face_id, user_id } = payload;
 
-        if (!name || !face_embedding || !face_id) {
-            return res.json({ error: 'Missing required fields: name, face_embedding, face_id' }, 400);
+        if (!name || !face_embedding || !face_id || !user_id) {
+            return res.json({ error: 'Missing required fields: name, face_embedding, face_id, user_id' }, 400);
         }
 
         if (!Array.isArray(face_embedding) || face_embedding.length !== 512) {
@@ -39,7 +39,7 @@ export default async ({ req, res, log, error }) => {
         const document = await databases.createDocument(
             process.env.DATABASE_ID,
             'users',
-            ID.unique(),
+            user_id,
             {
                 name: name,
                 face_id: face_id,
