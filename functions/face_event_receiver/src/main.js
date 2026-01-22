@@ -52,7 +52,7 @@ export default async ({ req, res, log, error }) => {
             'presence_logs',
             ID.unique(),
             {
-                users: payload.users,
+                users: payload.users[0], // Extract single ID from array
                 start_time: payload.start_time,
                 end_time: payload.end_time,
                 day: payload.day
