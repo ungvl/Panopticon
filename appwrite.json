@@ -48,6 +48,21 @@
             "timeout": 15
         },
         {
+            "$id": "coffee_event_receiver",
+            "name": "coffee_event_receiver",
+            "runtime": "node-18.0",
+            "path": "functions/coffee_event_receiver",
+            "entrypoint": "src/main.js",
+            "ignore": [
+                "node_modules",
+                ".env"
+            ],
+            "execute": [],
+            "events": [],
+            "schedule": "",
+            "timeout": 15
+        },
+        {
             "$id": "login",
             "name": "login",
             "runtime": "node-18.0",
